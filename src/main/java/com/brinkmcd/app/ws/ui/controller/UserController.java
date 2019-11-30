@@ -27,14 +27,17 @@ public class UserController {
 		// instantiate a UserRest obj to send as http response (UI layer)
 		UserRest returnValue = new UserRest();
 		
-		// instantiate a UserDto for DB transaction (data layer)
+		// instantiate a UserDto for DB insert transaction (data layer)
 		UserDto userDto = new UserDto();
 		
 		// copy data from the request object (userDetails) to the Dto
+		// (UI -> data layer)
 		BeanUtils.copyProperties(userDetails, userDto);
 		
-		// 
+		// instantiate a UserDto for result of transaction (data layer)
 		UserDto createdUser = userService.createUser(userDto);
+		
+		// copy data from Dto object to response object (data layer -> UI)
 		BeanUtils.copyProperties(createdUser, returnValue);
 		
 		return returnValue;
