@@ -1,5 +1,6 @@
 package com.brinkmcd.app.ws.ui.controller;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.brinkmcd.app.ws.shared.dto.UserDto;
 import com.brinkmcd.app.ws.ui.model.request.UserDetailsRequestModel;
 import com.brinkmcd.app.ws.ui.model.response.UserRest;
 
@@ -22,7 +24,20 @@ public class UserController {
 	
 	@PostMapping
 	public UserRest createUser(@RequestBody UserDetailsRequestModel userDetails) {
-		return null;
+		// instantiate a UserRest obj to send as http response (UI layer)
+		UserRest returnValue = new UserRest();
+		
+		// instantiate a UserDto for DB transaction (data layer)
+		UserDto userDto = new UserDto();
+		
+		// copy data from the request object (userDetails) to the Dto
+		BeanUtils.copyProperties(userDetails, userDto);
+		
+		// 
+		UserDto createdUser = userService.createUser(userDto);
+		BeanUtils.copyProperties(createdUser, returnValue);
+		
+		return returnValue;
 	}
 	
 	@PutMapping
