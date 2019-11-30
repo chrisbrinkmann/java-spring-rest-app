@@ -11,26 +11,34 @@ import com.brinkmcd.app.ws.shared.dto.UserDto;
 
 @Service
 public class UserServiceImpl implements UserService {
-	
+
 	@Autowired
 	UserRepository userRepository;
 
 	@Override
 	public UserDto createUser(UserDto user) {
-		
+
+		// check for existing user
+		if (userRepository.findByEmail(user.getEmail()) != null) {
+			throw new RuntimeException("Record already exists");
+		}
+
+		// copy user data from Dto to Entity (DB model object)
 		UserEntity userEntity = new UserEntity();
 		BeanUtils.copyProperties(user, userEntity);
-		
+
 		// set required fields
 		userEntity.setUserId("testUserId");
 		userEntity.setEncryptedPassword("testEncryptedPw");
-		
+
+		// INSERT query
 		UserEntity storedUserDetails = userRepository.save(userEntity);
-		
+
+		// copy data returned from query to Dtos
 		UserDto returnValue = new UserDto();
 		BeanUtils.copyProperties(storedUserDetails, returnValue);
-		
-		return null;
+
+		return returnValue;
 	}
 
 }
