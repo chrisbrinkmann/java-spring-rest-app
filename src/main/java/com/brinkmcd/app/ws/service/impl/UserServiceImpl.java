@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.brinkmcd.app.ws.UserRepository;
 import com.brinkmcd.app.ws.io.entity.UserEntity;
 import com.brinkmcd.app.ws.service.UserService;
+import com.brinkmcd.app.ws.shared.Utils;
 import com.brinkmcd.app.ws.shared.dto.UserDto;
 
 @Service
@@ -14,6 +15,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	UserRepository userRepository;
+	
+	@Autowired
+	Utils utils;
 
 	@Override
 	public UserDto createUser(UserDto user) {
@@ -27,8 +31,9 @@ public class UserServiceImpl implements UserService {
 		UserEntity userEntity = new UserEntity();
 		BeanUtils.copyProperties(user, userEntity);
 
-		// set required fields
-		userEntity.setUserId("testUserId");
+		// set required fields that were not given in the http request
+		String publicUserId = utils.generateUserId(20);
+		userEntity.setUserId(publicUserId);
 		userEntity.setEncryptedPassword("testEncryptedPw");
 
 		// INSERT query
