@@ -1,8 +1,11 @@
 package com.brinkmcd.app.ws.service.impl;
 
+import org.springframework.stereotype.Service;
+
 import com.brinkmcd.app.ws.service.UserService;
 import com.brinkmcd.app.ws.shared.dto.UserDto;
 
+@Service
 public class UserServiceImpl implements UserService {
 
 	@Override
