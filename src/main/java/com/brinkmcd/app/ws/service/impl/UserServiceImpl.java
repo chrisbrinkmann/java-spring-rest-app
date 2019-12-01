@@ -2,6 +2,7 @@ package com.brinkmcd.app.ws.service.impl;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.brinkmcd.app.ws.UserRepository;
@@ -18,6 +19,9 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	Utils utils;
+	
+	@Autowired
+	BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	@Override
 	public UserDto createUser(UserDto user) {
@@ -34,7 +38,9 @@ public class UserServiceImpl implements UserService {
 		// set required fields that were not given in the http request
 		String publicUserId = utils.generateUserId(20);
 		userEntity.setUserId(publicUserId);
-		userEntity.setEncryptedPassword("testEncryptedPw");
+		
+		// encrypt password
+		userEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 
 		// INSERT query
 		UserEntity storedUserDetails = userRepository.save(userEntity);
