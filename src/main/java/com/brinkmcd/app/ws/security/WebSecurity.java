@@ -31,7 +31,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 	}
 
 	/*
-	 * Authenticate User?
+	 * Authenticate User
 	 */
 	@Override
 	public void configure(AuthenticationManagerBuilder auth) throws Exception {
